@@ -127,6 +127,16 @@ body {
     cursor: pointer;
 }
 
+#youtube-audio-player {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0.01;
+    pointer-events: none;
+    bottom: 0;
+    right: 0;
+}
+
 .audio-control-container:hover {
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--color-neon-cyan);

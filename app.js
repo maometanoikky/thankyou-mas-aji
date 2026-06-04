@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.getElementById('main-content');
     
     const audioControl = document.getElementById('audio-control');
-    const bgMusic = document.getElementById('bg-music');
     const visualizer = document.getElementById('visualizer');
     const audioIcon = document.getElementById('audio-icon');
     const audioStatusText = document.getElementById('audio-status-text');
@@ -22,36 +21,95 @@ document.addEventListener('DOMContentLoaded', () => {
     const ctx = canvas.getContext('2d');
 
     // ==========================================
-    // AUDIO CONTROLLER (INTERACTIVE PLAYBACK)
+    // YOUTUBE AUDIO CONTROLLER (INTERACTIVE PLAYBACK)
     // ==========================================
+    let ytPlayer = null;
     let isMusicPlaying = false;
+    let ytPlayerReady = false;
+    let shouldPlayOnReady = false;
 
-    bgMusic.volume = 0.4; // 0.4 volume is more pleasant and less intrusive
+    // Dynamically load YouTube IFrame API script
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // Global callback required by YouTube IFrame API
+    window.onYouTubeIframeAPIReady = function() {
+        ytPlayer = new YT.Player('youtube-audio-player', {
+            height: '100',
+            width: '100',
+            videoId: 'jxGNahu3c_o',
+            playerVars: {
+                'autoplay': 0,
+                'controls': 0,
+                'disablekb': 1,
+                'fs': 0,
+                'rel': 0,
+                'showinfo': 0,
+                'iv_load_policy': 3,
+                'loop': 1,
+                'playlist': 'jxGNahu3c_o' // Necessary for looping individual video
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+        });
+    };
+
+    function onPlayerReady(event) {
+        ytPlayerReady = true;
+        ytPlayer.setVolume(40); // 40% volume is pleasant and not intrusive
+        if (shouldPlayOnReady) {
+            playMusic();
+        }
+    }
+
+    function onPlayerStateChange(event) {
+        // Loop video if it ends
+        if (event.data === YT.PlayerState.ENDED) {
+            ytPlayer.playVideo();
+        }
+    }
 
     function playMusic() {
-        bgMusic.play().then(() => {
-            isMusicPlaying = true;
-            visualizer.classList.add('playing');
-            if (audioIcon) {
-                audioIcon.className = 'fas fa-pause';
+        if (ytPlayerReady && ytPlayer) {
+            try {
+                ytPlayer.playVideo();
+                isMusicPlaying = true;
+                visualizer.classList.add('playing');
+                if (audioIcon) {
+                    audioIcon.className = 'fas fa-pause';
+                }
+                if (audioStatusText) {
+                    audioStatusText.textContent = 'Playing';
+                }
+            } catch (err) {
+                console.error("Failed to play video:", err);
             }
-            if (audioStatusText) {
-                audioStatusText.textContent = 'Playing';
-            }
-        }).catch(err => {
-            console.log("Autoplay blocked by browser. Awaiting user interaction.", err);
-        });
+        } else {
+            shouldPlayOnReady = true;
+        }
     }
 
     function pauseMusic() {
-        bgMusic.pause();
-        isMusicPlaying = false;
-        visualizer.classList.remove('playing');
-        if (audioIcon) {
-            audioIcon.className = 'fas fa-play';
-        }
-        if (audioStatusText) {
-            audioStatusText.textContent = 'Paused';
+        if (ytPlayerReady && ytPlayer) {
+            try {
+                ytPlayer.pauseVideo();
+                isMusicPlaying = false;
+                visualizer.classList.remove('playing');
+                if (audioIcon) {
+                    audioIcon.className = 'fas fa-play';
+                }
+                if (audioStatusText) {
+                    audioStatusText.textContent = 'Paused';
+                }
+            } catch (err) {
+                console.error("Failed to pause video:", err);
+            }
+        } else {
+            shouldPlayOnReady = false;
         }
     }
 

@@ -135,8 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Auto play music (triggered by user gesture)
         playMusic();
         
-        // Spawn small initial confetti blast inside intro screen
-        triggerBlast(window.innerWidth / 2, window.innerHeight / 2, 80);
+        // Spawn massive initial confetti blast inside intro screen
+        triggerBlast(window.innerWidth / 2, window.innerHeight / 2, 180);
+        
+        // Fire left and right cannons simultaneously!
+        triggerCannon(0, window.innerHeight, -45, 120);
+        triggerCannon(window.innerWidth, window.innerHeight, -135, 120);
         
         // Transition screen after card animation finishes
         setTimeout(() => {
@@ -146,7 +150,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Trigger a huge celebration blast on main screen
             setTimeout(() => {
-                triggerBlast(window.innerWidth / 2, window.innerHeight * 0.3, 150);
+                triggerBlast(window.innerWidth / 2, window.innerHeight * 0.3, 300);
+                // Fire another round of cannons to celebrate main page reveal!
+                triggerCannon(0, window.innerHeight, -35, 150);
+                triggerCannon(window.innerWidth, window.innerHeight, -145, 150);
             }, 400);
         }, 850);
     }
@@ -249,32 +256,40 @@ document.addEventListener('DOMContentLoaded', () => {
     initStars();
 
     class Particle {
-        constructor(x, y, type = 'confetti') {
+        constructor(x, y, type = 'confetti', customAngle = null, speedRange = null) {
             this.x = x;
             this.y = y;
             this.type = type; // 'confetti', 'heart', or 'spark'
             this.size = type === 'heart' ? Math.random() * 12 + 10 : (type === 'spark' ? Math.random() * 3 + 1.5 : Math.random() * 8 + 6);
             this.color = colors[Math.floor(Math.random() * colors.length)];
             
-            // Random velocities
-            const angle = Math.random() * Math.PI * 2;
+            // Determine angle
+            const angle = customAngle !== null ? customAngle : Math.random() * Math.PI * 2;
+            
+            // Determine speed
             let speed;
-            if (type === 'heart') {
-                speed = Math.random() * 3 + 1;
-            } else if (type === 'spark') {
-                speed = Math.random() * 1.5 + 0.5;
+            if (speedRange !== null) {
+                speed = speedRange[0] + Math.random() * (speedRange[1] - speedRange[0]);
             } else {
-                speed = Math.random() * 6 + 2;
+                if (type === 'heart') {
+                    speed = Math.random() * 3 + 1;
+                } else if (type === 'spark') {
+                    speed = Math.random() * 1.5 + 0.5;
+                } else {
+                    speed = Math.random() * 6 + 2;
+                }
             }
             
             this.vx = Math.cos(angle) * speed;
-            this.vy = Math.sin(angle) * speed - (type === 'heart' ? 2 : (type === 'spark' ? 0.8 : 0)); // floating upward
+            // Add natural upward lift if no custom angle is provided
+            this.vy = Math.sin(angle) * speed - (customAngle === null && type === 'heart' ? 2 : 0);
             
-            this.gravity = type === 'heart' ? -0.02 : (type === 'spark' ? -0.01 : 0.15); // Sparks and hearts float up
+            // Adjust gravity (direction of gravity is down (positive), unless it's a slow floating heart/spark)
+            this.gravity = type === 'heart' ? (customAngle !== null ? 0.12 : -0.02) : (type === 'spark' ? -0.01 : 0.15);
             this.opacity = 1;
             this.rotation = Math.random() * 360;
             this.rotationSpeed = type === 'spark' ? 0 : (Math.random() - 0.5) * 5;
-            this.decay = type === 'spark' ? Math.random() * 0.025 + 0.015 : (Math.random() * 0.015 + 0.01);
+            this.decay = type === 'spark' ? Math.random() * 0.025 + 0.015 : (Math.random() * 0.012 + 0.008); // slightly slower decay for longer-lasting confetti
         }
 
         draw() {
@@ -326,6 +341,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function triggerBlast(x, y, count = 80) {
         for (let i = 0; i < count; i++) {
             particles.push(new Particle(x, y, Math.random() > 0.4 ? 'confetti' : 'heart'));
+        }
+    }
+
+    function triggerCannon(x, y, baseAngleDeg, count = 100) {
+        const baseAngleRad = (baseAngleDeg * Math.PI) / 180;
+        const spreadRad = (35 * Math.PI) / 180; // 35 degrees spread
+        
+        for (let i = 0; i < count; i++) {
+            const angle = baseAngleRad + (Math.random() - 0.5) * spreadRad;
+            // Higher speed range for cannons to shoot across the screen
+            const speedRange = [10, 22]; 
+            const type = Math.random() > 0.45 ? 'confetti' : 'heart';
+            particles.push(new Particle(x, y, type, angle, speedRange));
         }
     }
 

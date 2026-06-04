@@ -484,52 +484,126 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // GRATITUDE JAR LOCALSTORAGE & INTEGRATION
+    // GRATITUDE JAR ONLINE DATABASE INTEGRATION
     // ==========================================
-    
-    // Default messages to pre-populate board if empty (set to empty for production release)
-    const defaultNotes = [];
+    const dbUrl = 'https://keyvalue.immanuel.co/api/KeyVal';
+    const appKey = '3u0ku0w0';
+    let notesCache = [];
 
-    function getStoredNotes() {
-        // Force-clear any previous cached notes on first load of this release
-        if (!localStorage.getItem('thank_you_notes_cleared_v3')) {
-            localStorage.removeItem('thank_you_notes');
-            localStorage.setItem('thank_you_notes_cleared_v3', 'true');
-        }
+    // Helper to encode UTF-8 to safe Base64
+    function encodeBase64(str) {
+        return btoa(unescape(encodeURIComponent(str)))
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=/g, '');
+    }
 
-        const stored = localStorage.getItem('thank_you_notes');
-        if (stored) {
-            return JSON.parse(stored);
-        } else {
-            localStorage.setItem('thank_you_notes', JSON.stringify(defaultNotes));
-            return defaultNotes;
+    // Helper to decode safe Base64 to UTF-8
+    function decodeBase64(safeBase64) {
+        try {
+            let base64 = safeBase64.replace(/-/g, '+').replace(/_/g, '/');
+            while (base64.length % 4) {
+                base64 += '=';
+            }
+            return decodeURIComponent(escape(atob(base64)));
+        } catch (e) {
+            console.error("Base64 decode failed:", e);
+            return "";
         }
     }
 
-    function saveNote(sender, message) {
-        const notes = getStoredNotes();
-        notes.unshift({ sender, message }); // Add new note at the start
-        localStorage.setItem('thank_you_notes', JSON.stringify(notes));
+    async function fetchOnlineNotes() {
+        try {
+            const res = await fetch(`${dbUrl}/GetValue/${appKey}/notes`);
+            if (res.ok) {
+                const text = await res.text();
+                // strip surrounding double quotes returned by keyvalue.immanuel.co
+                const cleanText = text.trim().replace(/^"|"$/g, '');
+                if (cleanText) {
+                    const decoded = decodeBase64(cleanText);
+                    if (decoded) {
+                        notesCache = JSON.parse(decoded);
+                    }
+                } else {
+                    notesCache = [];
+                }
+            }
+        } catch (err) {
+            console.error("Failed to fetch online notes:", err);
+            // fallback to local storage
+            const stored = localStorage.getItem('thank_you_notes');
+            if (stored) {
+                notesCache = JSON.parse(stored);
+            }
+        }
+        renderNotes();
+    }
+
+    async function saveOnlineNote(sender, message) {
+        // Fetch latest first to merge
+        try {
+            const res = await fetch(`${dbUrl}/GetValue/${appKey}/notes`);
+            if (res.ok) {
+                const text = await res.text();
+                const cleanText = text.trim().replace(/^"|"$/g, '');
+                if (cleanText) {
+                    const decoded = decodeBase64(cleanText);
+                    if (decoded) {
+                        notesCache = JSON.parse(decoded);
+                    }
+                }
+            }
+        } catch (err) {
+            console.error("Failed to fetch before save, using cache:", err);
+        }
+
+        // Add new note to the beginning
+        notesCache.unshift({ sender, message });
+
+        // Save back to localStorage cache
+        localStorage.setItem('thank_you_notes', JSON.stringify(notesCache));
+
+        // Save to online database
+        const rawJson = JSON.stringify(notesCache);
+        const encoded = encodeBase64(rawJson);
+        try {
+            const saveRes = await fetch(`${dbUrl}/UpdateValue/${appKey}/notes/${encoded}`, {
+                method: 'POST'
+            });
+            if (!saveRes.ok) {
+                console.error("Failed to save note online:", saveRes.statusText);
+            }
+        } catch (err) {
+            console.error("Failed to save note online:", err);
+        }
     }
 
     function renderNotes() {
-        const notes = getStoredNotes();
         notesGrid.innerHTML = '';
         
-        notes.forEach(note => {
-            const card = document.createElement('div');
-            card.className = 'sticky-note';
-            
-            card.innerHTML = `
-                <div class="note-pin"><i class="fas fa-thumbtack"></i></div>
-                <p class="note-text">"${escapeHTML(note.message)}"</p>
-                <div class="note-sender">— ${escapeHTML(note.sender)}</div>
-            `;
-            
-            notesGrid.appendChild(card);
-        });
+        if (notesCache.length === 0) {
+            // Display a placeholder message if the board is empty
+            const placeholder = document.createElement('div');
+            placeholder.className = 'empty-board-placeholder';
+            placeholder.style.cssText = "grid-column: 1 / -1; text-align: center; color: var(--color-text-muted); font-style: italic; padding: 40px 0;";
+            placeholder.innerHTML = `<p>Belum ada ucapan. Yuk, jadi yang pertama mengirim pesan!</p>`;
+            notesGrid.appendChild(placeholder);
+        } else {
+            notesCache.forEach((note, idx) => {
+                const card = document.createElement('div');
+                card.className = 'sticky-note';
+                
+                card.innerHTML = `
+                    <div class="note-pin"><i class="fas fa-thumbtack"></i></div>
+                    <p class="note-text">"${escapeHTML(note.message)}"</p>
+                    <div class="note-sender">— ${escapeHTML(note.sender)}</div>
+                `;
+                
+                notesGrid.appendChild(card);
+            });
+        }
 
-        noteCountEl.textContent = notes.length;
+        noteCountEl.textContent = notesCache.length;
     }
 
     // Helper to escape user inputs
@@ -581,9 +655,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 50);
             
             // Callback when flight arrives
-            setTimeout(() => {
-                // Save note
-                saveNote(sender, message);
+            setTimeout(async () => {
+                // Save note online
+                await saveOnlineNote(sender, message);
                 
                 // Re-render notes
                 renderNotes();
@@ -610,5 +684,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initial render
-    renderNotes();
+    fetchOnlineNotes();
 });

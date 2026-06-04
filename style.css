@@ -1288,6 +1288,44 @@ body {
     }
 }
 
+@media (max-width: 600px) {
+    .header {
+        height: 70px;
+        padding: 0 15px;
+    }
+    
+    .logo {
+        font-size: 1.8rem;
+    }
+    
+    .header-actions {
+        gap: 8px;
+    }
+    
+    .audio-control-container {
+        padding: 6px 12px;
+        gap: 6px;
+    }
+    
+    #audio-status-text {
+        display: none;
+    }
+    
+    .visualizer-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .love-trigger-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .main-content {
+        padding-top: 70px;
+    }
+}
+
 @media (max-width: 480px) {
     .intro-overlay {
         padding: 20px;

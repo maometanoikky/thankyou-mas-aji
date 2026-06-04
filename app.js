@@ -487,34 +487,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // GRATITUDE JAR LOCALSTORAGE & INTEGRATION
     // ==========================================
     
-    // Default messages to pre-populate board if empty
-    const defaultNotes = [
-        {
-            sender: "Koordinator Pemorsian",
-            message: "Terima kasih banyak Pak Aji atas bimbingannya mengenai standar gizi dan ketelitian pemorsian. Sangat bermanfaat bagi kinerja tim dapur."
-        },
-        {
-            sender: "Rian (Tim Dapur)",
-            message: "Selamat jalan Pak Aji, terima kasih sudah selalu sabar membimbing kami. Semoga sukses di tempat baru dan rezekinya selalu lancar!"
-        },
-        {
-            sender: "Staf Pemorsian",
-            message: "Terima kasih atas dedikasi dan ilmu yang telah dibagikan selama ini di SPPG Tanjung Tirto. Semoga sehat dan bahagia selalu sekeluarga."
-        }
-    ];
+    // Default messages to pre-populate board if empty (set to empty for production release)
+    const defaultNotes = [];
 
     function getStoredNotes() {
+        // Force-clear any previous cached notes on first load of this release
+        if (!localStorage.getItem('thank_you_notes_cleared_v3')) {
+            localStorage.removeItem('thank_you_notes');
+            localStorage.setItem('thank_you_notes_cleared_v3', 'true');
+        }
+
         const stored = localStorage.getItem('thank_you_notes');
         if (stored) {
-            const parsed = JSON.parse(stored);
-            // Force reset if old placeholder data is detected
-            if (parsed.length > 0 && parsed.some(n => n.sender === "Budi Santoso")) {
-                localStorage.setItem('thank_you_notes', JSON.stringify(defaultNotes));
-                return defaultNotes;
-            }
-            return parsed;
+            return JSON.parse(stored);
         } else {
-            // Set defaults if empty
             localStorage.setItem('thank_you_notes', JSON.stringify(defaultNotes));
             return defaultNotes;
         }

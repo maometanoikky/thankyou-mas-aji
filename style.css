@@ -1326,6 +1326,21 @@ body {
     }
 }
 
+@media (max-width: 360px) {
+    .logo {
+        font-size: 1.5rem;
+    }
+    
+    .love-trigger-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+    
+    .audio-control-container {
+        padding: 5px 10px;
+    }
+}
+
 @media (max-width: 480px) {
     .intro-overlay {
         padding: 20px;

@@ -26,18 +26,7 @@
     <!-- Confetti & Heart Canvas -->
     <canvas id="effects-canvas"></canvas>
 
-    <!-- Floating Interactive Audio Player (Click to play/pause) -->
-    <div class="audio-control-container" id="audio-control" title="Klik untuk putar/jeda musik">
-        <span class="visualizer-label"><i class="fas fa-play" id="audio-icon"></i> <span id="audio-status-text">Music</span></span>
-        <div class="visualizer" id="visualizer">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
-        <!-- Audio Source (Royalty-free elegant piano music) -->
-        <audio id="bg-music" loop src="https://www.chosic.com/wp-content/uploads/2021/04/Autumn-Walk.mp3"></audio>
-    </div>
+
 
     <!-- Opening Screen (Intro) -->
     <div class="intro-overlay" id="intro-screen">
@@ -72,9 +61,23 @@
         <!-- Header Section -->
         <header class="header">
             <div class="logo">Thank You</div>
-            <button class="love-trigger-btn" id="header-love-btn">
-                <i class="fas fa-heart"></i> Kirim Cinta
-            </button>
+            <div class="header-actions">
+                <!-- Floating Interactive Audio Player (Click to play/pause) -->
+                <div class="audio-control-container" id="audio-control" title="Klik untuk putar/jeda musik">
+                    <span class="visualizer-label"><i class="fas fa-play" id="audio-icon"></i> <span id="audio-status-text">Music</span></span>
+                    <div class="visualizer" id="visualizer">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    <!-- Audio Source (Royalty-free elegant piano music) -->
+                    <audio id="bg-music" loop src="https://www.chosic.com/wp-content/uploads/2021/04/Autumn-Walk.mp3"></audio>
+                </div>
+                <button class="love-trigger-btn" id="header-love-btn">
+                    <i class="fas fa-heart"></i> Kirim Cinta
+                </button>
+            </div>
         </header>
 
         <!-- Hero Section -->

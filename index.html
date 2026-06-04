@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terima Kasih Pak Setia Aji - Tim Pemorsian SPPG Tanjung Tirto</title>
+    
+    <!-- Meta Tags SEO -->
+    <meta name="description" content="Website ucapan terimakasih khusus untuk Pak Setia Aji, Ahli Gizi SPPG Tanjung Tirto, dari Tim Pemorsian sebagai bentuk apresiasi dan doa tulus.">
+    <meta name="keywords" content="ucapan terimakasih, Setia Aji, SPPG Tanjung Tirto, ahli gizi resign, tim pemorsian">
+    <meta name="author" content="Tim Pemorsian">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Confetti & Heart Canvas -->
+    <canvas id="effects-canvas"></canvas>
+
+    <!-- Floating Interactive Audio Player (Click to play/pause) -->
+    <div class="audio-control-container" id="audio-control" title="Klik untuk putar/jeda musik">
+        <span class="visualizer-label"><i class="fas fa-play" id="audio-icon"></i> <span id="audio-status-text">Music</span></span>
+        <div class="visualizer" id="visualizer">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <!-- Audio Source (Royalty-free elegant piano music) -->
+        <audio id="bg-music" loop src="https://www.chosic.com/wp-content/uploads/2021/04/Autumn-Walk.mp3"></audio>
+    </div>
+
+    <!-- Opening Screen (Intro) -->
+    <div class="intro-overlay" id="intro-screen">
+        <!-- Glowing Mesh Background Blobs -->
+        <div class="glow-blob blob-1"></div>
+        <div class="glow-blob blob-2"></div>
+        
+        <div class="modern-card-wrapper">
+            <span class="intro-subtitle">SPPG Tanjung Tirto</span>
+            <h2 class="intro-title">Dedikasi & Apresiasi</h2>
+            
+            <div class="modern-card" id="modern-card">
+                <div class="card-glass-shine"></div>
+                <div class="card-content-inner">
+                    <div class="glowing-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="card-recipient">Pak Setia Aji</h3>
+                    <p class="card-tagline">Terima kasih atas ilmu & bimbingan yang bermanfaat bagi kami.</p>
+                    <div class="card-sender-badge">Tim Pemorsian</div>
+                </div>
+            </div>
+            
+            <button class="open-btn" id="open-envelope-btn">Buka Pesan <i class="fas fa-chevron-right"></i></button>
+            <div class="envelope-tip">Ketuk kartu atau tombol di atas untuk membuka</div>
+        </div>
+    </div>
+
+    <!-- Main Content (Revealed after envelope opens) -->
+    <div class="main-content" id="main-content">
+        
+        <!-- Header Section -->
+        <header class="header">
+            <div class="logo">Thank You</div>
+            <button class="love-trigger-btn" id="header-love-btn">
+                <i class="fas fa-heart"></i> Kirim Cinta
+            </button>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-text-content">
+                    <span class="subtitle">Apresiasi Tulus dari Tim Pemorsian SPPG Tanjung Tirto</span>
+                    <h1 class="main-title">Terima Kasih, Pak Setia Aji!</h1>
+                    <p class="hero-description">
+                        Terima kasih atas segala ilmu yang bermanfaat, kesabaran dalam membimbing, dan dedikasi luar biasa yang telah Bapak berikan selama bertugas sebagai Ahli Gizi di SPPG Tanjung Tirto. Kehadiran Bapak memberikan banyak pelajaran berharga bagi kami.
+                    </p>
+                    <div class="quote-box">
+                        <i class="fas fa-quote-left quote-icon"></i>
+                        <p class="quote-text">Semoga langkah baru yang Bapak tempuh selalu dipenuhi keberhasilan, dan semoga Allah SWT senantiasa melancarkan rezeki serta memberikan kesehatan dan kebahagiaan kepada Bapak sekeluarga.</p>
+                        <span class="quote-author">— Doa Tulus dari Kami, Tim Pemorsian</span>
+                    </div>
+                </div>
+                <div class="hero-image-frame">
+                    <div class="image-inner">
+                        <img src="assets/setia_aji.jpg" alt="Foto Pak Setia Aji" class="thank-you-image">
+                    </div>
+                    <div class="frame-border"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Memory Wall & Appreciation Cards -->
+        <section class="memories-section">
+            <div class="section-header">
+                <span class="section-tag">Apresiasi & Doa</span>
+                <h2 class="section-title">Kenangan & Dedikasi Pak Setia Aji</h2>
+                <p class="section-subtitle">Berikut adalah beberapa hal yang sangat berharga yang telah Bapak bagikan kepada kami:</p>
+            </div>
+
+            <div class="cards-grid">
+                <!-- Card 1 -->
+                <div class="memory-card">
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Ilmu yang Bermanfaat</h3>
+                    <p>Terima kasih atas ilmu gizi, takaran porsi, dan standar pemorsian makanan yang telah Bapak ajarkan kepada kami. Ilmu ini sangat berguna bagi tugas kami sehari-hari.</p>
+                    <div class="card-glow"></div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="memory-card">
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h3>Bimbingan & Kesabaran</h3>
+                    <p>Terima kasih telah membimbing kami dengan penuh kesabaran dan kebaikan. Bapak selalu siap mengarahkan kami agar penyajian makanan berjalan dengan sempurna.</p>
+                    <div class="card-glow"></div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="memory-card">
+                    <div class="card-icon-wrapper">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3>Doa Kelancaran Rezeki</h3>
+                    <p>Kami mendoakan agar rezeki Pak Setia Aji selalu dilancarkan di masa depan, karier semakin cemerlang, dan perjalanan ke depan dipenuhi kesuksesan.</p>
+                    <div class="card-glow"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Gratitude Jar Section -->
+        <section class="interactive-section">
+            <div class="section-header">
+                <span class="section-tag">Interaksi</span>
+                <h2 class="section-title">Toples Rasa Syukur & Doa</h2>
+                <p class="section-subtitle">Tuliskan pesan kesan atau doa terbaik Anda untuk Pak Setia Aji di bawah ini untuk dimasukkan ke dalam toples digital.</p>
+            </div>
+
+            <div class="gratitude-container">
+                <!-- Input Card -->
+                <div class="gratitude-input-card">
+                    <h3 class="input-title"><i class="fas fa-pen-nib"></i> Tulis Pesan Anda</h3>
+                    <form id="gratitude-form" onsubmit="return false;">
+                        <div class="form-group">
+                            <label for="input-sender">Nama Anda</label>
+                            <input type="text" id="input-sender" placeholder="Contoh: Teman Baikmu" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-message">Pesan Apresiasi</label>
+                            <textarea id="input-message" rows="4" placeholder="Tuliskan ucapan terimakasih atau kenangan indah..." required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-text">Kirim ke Toples</span> <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Visual Jar Box -->
+                <div class="jar-display-wrapper">
+                    <div class="gratitude-jar">
+                        <div class="jar-lid"></div>
+                        <div class="jar-body">
+                            <div class="jar-glow"></div>
+                            <!-- Floating hearts inside jar -->
+                            <div class="jar-hearts">
+                                <span class="jar-heart h1">❤️</span>
+                                <span class="jar-heart h2">💖</span>
+                                <span class="jar-heart h3">✨</span>
+                                <span class="jar-heart h4">🌸</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="jar-counter">
+                        Telah terkumpul <span id="note-count">0</span> pesan kehangatan
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wishes/Notes Board -->
+            <div class="notes-board-wrapper">
+                <h3 class="board-title"><i class="fas fa-thumbtack"></i> Papan Pesan Apresiasi</h3>
+                <div class="notes-grid" id="notes-grid">
+                    <!-- Dynamic Notes will be inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">Terima Kasih Pak Setia Aji</div>
+                <p class="footer-text">Dibuat dengan segenap rasa hormat dan syukur oleh Tim Pemorsian SPPG Tanjung Tirto.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                </div>
+                <div class="copyright">&copy; 2026. Hak Cipta Dilindungi.</div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
